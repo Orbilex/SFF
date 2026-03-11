@@ -1,20 +1,27 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# 🤖 Servo: Frame Field
 
-# Run and deploy your AI Studio app
+**A high-complexity tower defense game built to push the limits of vibe coding.**
 
-This contains everything you need to run your app locally.
+`Servo: Frame Field` is a tactical survival experiment. It explores how deep and mechanically complex a game can get when built primarily through natural language intent and iterative AI collaboration.
 
-View your app in AI Studio: https://ai.studio/apps/1ee71448-7841-4a93-a9eb-57df14f32dca
+---
 
-## Run Locally
+## 🎮 Play Now
+**No installation required. Jump straight into the field:**
+### 👉 [servoframefield.vercel.app](https://servoframefield.vercel.app)
 
-**Prerequisites:**  Node.js
+---
 
+## ⚡ The Vibe
+This isn't a basic "towers on a grid" project. It’s a stress test for **Vibe Coding**, focusing on:
+* **Complex Enemy Pathing:** Swarms that adapt and hunt for gaps in your perimeter.
+* **Frame-Based Logic:** High-precision interactions between towers (Servos) and the field.
+* **Deep Tech Trees:** Multiple upgrade paths that change how the game plays.
+* **Reactive UI:** A visual style designed to feel like a living machine.
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## 🛠 Methodology
+Built using **Vibe Coding**—using high-level conceptual prompts to architect game state, projectile physics, and enemy AI. The goal was to prove that complex, non-linear gameplay loops can be "vibe-coded" into existence without losing performance.
+
+---
+
+**"If the frame holds, the vibe survives."**
