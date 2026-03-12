@@ -2,6 +2,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import GameCanvas from './components/GameCanvas';
 import ArmoryModal from './components/ArmoryModal';
+import ForgeModal from './components/ForgeModal';
+import ArsenalModal from './components/ArsenalModal';
 import { TOWER_STATS, INITIAL_STATE, ROMAN_NUMERALS, MOBILE_WIDTH, MOBILE_HEIGHT, PC_WIDTH, PC_HEIGHT } from './constants';
 import { TowerType, Rarity, GameState, ParadoxChoice } from './types';
 import { Zap, Hexagon, Move, Snowflake, Crosshair, Activity, Shield, Radio, Cpu, Map, RotateCcw, Box, Rocket, CircleDot, AlertTriangle, Lock, ChevronUp, Globe, ArrowUpRight, FastForward, Flame, Skull, Hammer, Gift, Pause, Container, Star, Sigma, Bot, Terminal, Package, Sparkles, HelpCircle, Atom, X, Monitor, Smartphone, Settings, Volume2, VolumeX } from 'lucide-react';
@@ -40,6 +42,12 @@ const App: React.FC = () => {
   const [wave, setWave] = useState(INITIAL_STATE.wave);
   const [level, setLevel] = useState(INITIAL_STATE.level);
   const [galaxy, setGalaxy] = useState(INITIAL_STATE.galaxy);
+  const [servium, setServium] = useState(INITIAL_STATE.servium);
+  const [servos, setServos] = useState<any[]>(INITIAL_STATE.servos);
+  const [activeServo, setActiveServo] = useState<any | null>(null);
+  const [isServoPlaced, setIsServoPlaced] = useState(false);
+  const [selectedServoForPlacement, setSelectedServoForPlacement] = useState<any | null>(null);
+  const [forceActivateSkillId, setForceActivateSkillId] = useState<string | null>(null);
   const [selectedTower, setSelectedTower] = useState<TowerType | null>(null);
   const [selectedSlotIndex, setSelectedSlotIndex] = useState<number | null>(null);
   const [tacticalLog, setTacticalLog] = useState<string[]>(["Commander, systems online. Waiting for enemy signatures."]);
@@ -80,6 +88,8 @@ const App: React.FC = () => {
   const [isCrateMode, setIsCrateMode] = useState(false);
 
   const [isArmoryOpen, setIsArmoryOpen] = useState(false);
+  const [isForgeOpen, setIsForgeOpen] = useState(false);
+  const [isArsenalOpen, setIsArsenalOpen] = useState(false);
   const [isPCVersion, setIsPCVersion] = useState(true);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -124,6 +134,7 @@ const App: React.FC = () => {
     setIsShopOpen(false);
     setIsAscensionOpen(false);
     setIsArmoryOpen(false);
+    setIsServoPlaced(false);
     setAppState('PLAYING');
     setFullResetTrigger(prev => prev + 1);
     playMusic();
@@ -230,6 +241,7 @@ const App: React.FC = () => {
       setCrateOpening(false);
       setRefundMsg(null);
       setRefundValue(0);
+      setIsServoPlaced(false);
       // Trigger map reset in canvas
       setMapResetTrigger(prev => prev + 1);
       addLog(`SECTOR ${level + 1} INITIATED. LOADOUT LOCKED.`);
@@ -305,6 +317,11 @@ const App: React.FC = () => {
       setLives(INITIAL_STATE.lives);
       setInventory(INITIAL_STATE.inventory);
       setTowerLevels(INITIAL_STATE.towerLevels);
+      setIsServoPlaced(false);
+      
+      // Award Servium for completing a galaxy
+      setServium(prev => prev + 100);
+      addLog(`+100 SERVIUM ACQUIRED.`);
       // Reset Loadout but prepare for quantum logic
       const nextLoadout: (TowerType | null)[] = [TowerType.PULSE, TowerType.BLASTER, null, null, null];
       const nextQuantumSlots: Record<number, boolean> = {};
@@ -390,6 +407,8 @@ const App: React.FC = () => {
       // Cost Logic handled in GameCanvas, here we just select
       const cost = isConMode ? 1 : (quantumSlots[slotIndex] ? 50 : stats.cost);
       
+      setSelectedServoForPlacement(null); // Deselect servo if a tower is clicked
+
       // Only check affordability if NOT selecting the already selected tower (toggle off)
       if (selectedTower !== type || selectedSlotIndex !== slotIndex) {
          if (money < cost) return; 
@@ -649,9 +668,9 @@ const App: React.FC = () => {
             </button>
 
             <div className="flex gap-4 w-full">
-                <button className="flex-1 bg-zinc-900/50 hover:bg-zinc-800/50 border border-white/5 hover:border-white/10 p-3 rounded-xl flex flex-col items-center gap-2 transition-all">
-                    <Star size={18} className="text-yellow-500/70" />
-                    <span className="text-[10px] uppercase tracking-wider text-zinc-400">Upgrades</span>
+                <button onClick={() => setIsForgeOpen(true)} className="flex-1 bg-zinc-900/50 hover:bg-zinc-800/50 border border-white/5 hover:border-white/10 p-3 rounded-xl flex flex-col items-center gap-2 transition-all">
+                    <Flame size={18} className="text-orange-500/70" />
+                    <span className="text-[10px] uppercase tracking-wider text-zinc-400">Forge</span>
                 </button>
                 <button onClick={() => setIsArmoryOpen(true)} className="flex-1 bg-zinc-900/50 hover:bg-zinc-800/50 border border-white/5 hover:border-white/10 p-3 rounded-xl flex flex-col items-center gap-2 transition-all">
                     <Package size={18} className="text-purple-500/70" />
@@ -666,6 +685,17 @@ const App: React.FC = () => {
 
         {/* ARMORY MODAL */}
         <ArmoryModal isOpen={isArmoryOpen} onClose={() => setIsArmoryOpen(false)} />
+        {/* FORGE MODAL */}
+        <ForgeModal 
+          isOpen={isForgeOpen} 
+          onClose={() => setIsForgeOpen(false)} 
+          servium={servium} 
+          setServium={setServium} 
+          servos={servos} 
+          setServos={setServos} 
+          activeServo={activeServo} 
+          setActiveServo={setActiveServo} 
+        />
       </div>
     );
   }
@@ -1119,18 +1149,26 @@ const App: React.FC = () => {
                       </div>
                   </div>
 
-                  <button 
-                    onClick={handleNextSector}
-                    className="w-full bg-white text-black hover:bg-zinc-200 font-bold py-4 px-6 rounded-xl shadow-[0_0_15px_rgba(255,255,255,0.3)] text-sm tracking-[0.2em] uppercase transition-all transform active:scale-95"
-                  >
-                      Deploy Next Sector
-                  </button>
+                  <div className="flex gap-2">
+                      <button 
+                        onClick={() => setIsArsenalOpen(true)}
+                        className="w-1/3 bg-purple-900/50 text-purple-400 hover:bg-purple-900/70 border border-purple-500/30 font-bold py-4 px-4 rounded-xl shadow-[0_0_15px_rgba(168,85,247,0.1)] text-xs tracking-wider uppercase transition-all flex items-center justify-center gap-2"
+                      >
+                          <Shield size={16} /> Arsenal
+                      </button>
+                      <button 
+                        onClick={handleNextSector}
+                        className="w-2/3 bg-white text-black hover:bg-zinc-200 font-bold py-4 px-6 rounded-xl shadow-[0_0_15px_rgba(255,255,255,0.3)] text-sm tracking-[0.2em] uppercase transition-all transform active:scale-95"
+                      >
+                          Deploy Next Sector
+                      </button>
+                  </div>
               </div>
           </div>
       )}
 
       {/* --- TOP HUD (Stats) --- */}
-      <header className={`shrink-0 z-20 bg-zinc-950/80 backdrop-blur border-b border-white/10 p-2 shadow-lg flex flex-col gap-2 ${isPCVersion ? 'absolute top-0 left-0 right-0' : ''}`}>
+      <header className={`shrink-0 z-20 bg-zinc-950/80 backdrop-blur border-b border-white/10 p-2 shadow-lg flex flex-col gap-2 absolute top-0 left-0 right-0`}>
          <div className={`flex justify-between items-center ${isPCVersion ? 'max-w-6xl' : 'max-w-lg'} mx-auto w-full`}>
              <div className="flex items-center gap-2">
                  <div className="flex flex-col leading-none">
@@ -1172,15 +1210,26 @@ const App: React.FC = () => {
       </header>
 
       {/* --- GAME CANVAS (Middle) --- */}
-      <main className={`${isPCVersion ? 'absolute inset-0 z-0' : 'flex-grow relative'} flex items-center justify-center bg-black overflow-hidden`}>
+      <main className={`absolute inset-0 z-0 flex items-center justify-center bg-black overflow-hidden`}>
           <div className="absolute inset-0 bg-gradient-to-b from-zinc-900/20 to-transparent pointer-events-none z-10"></div>
-          <div className={`w-full h-full ${isPCVersion ? 'max-w-none p-0' : 'max-w-md mx-auto p-1'} flex items-center justify-center`}>
+          <div className={`w-full h-full max-w-none p-0 flex items-center justify-center`}>
               <GameCanvas 
-                gameWidth={isPCVersion ? mainDimensions.width : MOBILE_WIDTH}
-                gameHeight={isPCVersion ? mainDimensions.height : MOBILE_HEIGHT}
+                gameWidth={mainDimensions.width}
+                gameHeight={mainDimensions.height}
                 isPaused={isPaused}
                 selectedTower={selectedTower}
-                onPlaceTower={() => setSelectedTower(null)}
+                onPlaceTower={() => {
+                  setSelectedTower(null);
+                  setSelectedSlotIndex(null);
+                }}
+                selectedServoForPlacement={selectedServoForPlacement}
+                onPlaceServo={() => {
+                  setSelectedServoForPlacement(null);
+                  setIsServoPlaced(true);
+                }}
+                activeServo={activeServo}
+                forceActivateSkillId={forceActivateSkillId}
+                onSkillActivated={() => setForceActivateSkillId(null)}
                 onMoneyChange={setMoney}
                 onLivesChange={setLives}
                 onWaveChange={handleWaveChange}
@@ -1205,9 +1254,79 @@ const App: React.FC = () => {
       </main>
 
       {/* --- BOTTOM DOCK (Controls) --- */}
-      <footer className={`shrink-0 z-20 bg-zinc-950/90 backdrop-blur border-t border-white/10 pb-safe ${isPCVersion ? 'absolute bottom-0 left-0 right-0' : ''}`}>
+      <footer className={`shrink-0 z-20 bg-zinc-950/90 backdrop-blur border-t border-white/10 pb-safe absolute bottom-0 left-0 right-0`}>
           <div className={`${isPCVersion ? 'max-w-6xl' : 'max-w-md'} mx-auto p-2 overflow-x-auto no-scrollbar`}>
               <div className="flex gap-3 justify-center min-w-max px-4">
+                
+                {/* Servo Slot */}
+                {activeServo && (
+                  <div className="flex gap-1 mr-2 border-r border-white/10 pr-3">
+                    {!isServoPlaced ? (
+                      <button
+                        onClick={() => {
+                          setSelectedServoForPlacement(selectedServoForPlacement ? null : activeServo);
+                          setSelectedTower(null);
+                          setSelectedSlotIndex(null);
+                        }}
+                        className={`w-32 h-20 rounded-xl flex flex-col items-center justify-center gap-1 border transition-all duration-200 relative group flex-shrink-0
+                          ${selectedServoForPlacement 
+                            ? 'bg-purple-900/40 border-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.3)] -translate-y-2' 
+                            : 'bg-zinc-800/40 border-purple-500/30 active:scale-95' 
+                          }
+                        `}
+                      >
+                        <div className="absolute top-0 left-0 w-full text-center text-[8px] font-bold text-white/50 bg-purple-500/20 rounded-t-xl py-0.5">
+                          SERVO
+                        </div>
+                        <Shield size={24} className="text-purple-400 mt-2" />
+                        <div className="text-[9px] font-bold text-purple-400 uppercase mt-1">
+                          DEPLOY
+                        </div>
+                      </button>
+                    ) : (
+                      <div className="flex gap-2">
+                        {activeServo.skills.map((skill: any, idx: number) => {
+                          const isUnlocked = skill.currentLevel > 0;
+                          return (
+                            <button
+                              key={skill.id}
+                              disabled={!isUnlocked}
+                              onClick={() => {
+                                const cost = 500;
+                                if (money >= cost) {
+                                  setMoney(prev => prev - cost);
+                                  setForceActivateSkillId(skill.id);
+                                } else {
+                                  addLog(`Not enough credits to force activate ${skill.name}. Needs ${cost}.`);
+                                }
+                              }}
+                              className={`w-16 h-20 rounded-xl flex flex-col items-center justify-center gap-1 border transition-all duration-200 relative group flex-shrink-0
+                                ${isUnlocked 
+                                  ? (money >= 500 ? 'bg-purple-900/20 border-purple-500/30 hover:bg-purple-900/40 active:scale-95 cursor-pointer' : 'bg-red-900/20 border-red-500/30 opacity-50 cursor-not-allowed')
+                                  : 'bg-zinc-900/20 border-transparent opacity-40 grayscale cursor-not-allowed'
+                                }
+                              `}
+                            >
+                              <div className={`absolute top-0 left-0 w-full text-center text-[8px] font-bold text-white/50 rounded-t-xl py-0.5 ${isUnlocked && money < 500 ? 'bg-red-500/20' : 'bg-purple-500/20'}`}>
+                                SKILL {idx + 1}
+                              </div>
+                              <Zap size={16} className={isUnlocked ? (money >= 500 ? 'text-purple-400' : 'text-red-400') : 'text-zinc-500'} />
+                              <div className={`text-[8px] font-bold uppercase mt-1 text-center leading-tight px-1 ${isUnlocked ? (money >= 500 ? 'text-purple-400' : 'text-red-400') : 'text-zinc-500'}`}>
+                                {skill.name}
+                              </div>
+                              {isUnlocked && (
+                                <div className="absolute -top-2 -right-2 bg-zinc-900 border border-purple-500/30 rounded-full px-1.5 py-0.5 text-[8px] text-purple-300 font-mono">
+                                  $500
+                                </div>
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {activeLoadout.map((type, idx) => {
                     if (!type) {
                         return (
@@ -1284,6 +1403,15 @@ const App: React.FC = () => {
               </div>
           </div>
       </footer>
+      <ArsenalModal 
+        isOpen={isArsenalOpen} 
+        onClose={() => setIsArsenalOpen(false)} 
+        activeServo={activeServo} 
+        setServos={setServos} 
+        setActiveServo={setActiveServo}
+        money={money} 
+        setMoney={setMoney} 
+      />
     </div>
   );
 };
