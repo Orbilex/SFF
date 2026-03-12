@@ -1,12 +1,43 @@
 
 
-import { GolemType, TowerType, Vector2D, Rarity, BossData, BossPart, BossTrait, Enemy, EnemyShape, EnemyTrait } from './types';
+import { GolemType, TowerType, ServoType, Vector2D, Rarity, BossData, BossPart, BossTrait, Enemy, EnemyShape, EnemyTrait } from './types';
 
 export const GRID_SIZE = 50; 
 export const MOBILE_WIDTH = 600;
 export const MOBILE_HEIGHT = 720;
 export const PC_WIDTH = 1200;
 export const PC_HEIGHT = 720;
+
+export const SERVO_STATS = {
+  [ServoType.THE_BUILDER]: {
+    name: 'The Builder',
+    cost: 5, // Servium cost
+    damage: 30,
+    cooldown: 1000, // ms
+    color: '#9333ea', // Purple glows
+    desc: 'An elegant angular robot with a top hat. Uses a futuristic handcannon.',
+    skills: [
+      {
+        id: 'loyal_buddy',
+        name: 'Loyal Buddy',
+        description: 'Spawns a bipedal robot that follows enemies and shoots them. Explodes after 30s.',
+        baseUnlockCost: 1000,
+        baseChance: 0.05,
+        chanceIncrement: 0.01,
+        damageMultiplier: 1.5
+      },
+      {
+        id: 'better_buddy',
+        name: 'Better Buddy',
+        description: 'Spawns a giant mech that shoots rapid gatling missiles. Explodes after 50s dealing map-wide damage.',
+        baseUnlockCost: 5000,
+        baseChance: 0.005,
+        chanceIncrement: 0.001,
+        damageMultiplier: 2.0
+      }
+    ]
+  }
+};
 
 export const ROMAN_NUMERALS = ['0', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
 
@@ -554,6 +585,8 @@ export const INITIAL_STATE = {
   level: 1,
   galaxy: 1,
   score: 0,
+  servium: 5,
+  servos: [],
   inventory: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
   towerLevels: {}, // Starts empty, meaning Level 0
   modifiers: {
