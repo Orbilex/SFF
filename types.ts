@@ -23,6 +23,54 @@ export enum TowerType {
   EVERYMECH = 'EVERYMECH'
 }
 
+export enum ServoType {
+  THE_BUILDER = 'THE_BUILDER'
+}
+
+export interface ServoSkill {
+  id: string;
+  name: string;
+  description: string;
+  baseUnlockCost: number;
+  currentLevel: number;
+  baseChance: number;
+  chanceIncrement: number;
+  damageMultiplier: number;
+}
+
+export interface ServoData {
+  id: string;
+  type: ServoType;
+  stats: {
+    damageMult: number;
+    fireRateMult: number;
+  }; // Random IVs
+  damageLevel?: number; // Added for basic attack damage upgrade
+  skills: ServoSkill[];
+}
+
+export interface ServoEntity {
+  id: string;
+  type: ServoType;
+  position: Vector2D;
+  lastFired: number;
+  targetId: string | null;
+  angle: number;
+  data: ServoData;
+  activeMinions: MinionEntity[];
+}
+
+export interface MinionEntity {
+  id: string;
+  type: 'LOYAL_BUDDY' | 'BETTER_BUDDY';
+  position: Vector2D;
+  targetId: string | null;
+  spawnTime: number;
+  lifeTime: number;
+  lastFired: number;
+  damage: number;
+}
+
 export enum Rarity {
   COMMON = 'COMMON',
   RARE = 'RARE',
@@ -146,7 +194,7 @@ export interface Tower {
 
 export interface Projectile {
   id: string;
-  type: 'BULLET' | 'MISSILE' | 'BEAM' | 'PLASMA' | 'BLACKHOLE' | 'ARTILLERY' | 'OSAPM_MARKER' | 'OSAPM_UP' | 'OSAPM_MINI_MISSILE' | 'SIGMA_SHELL' | 'EM_SNIPER' | 'EM_MISSILE' | 'EM_GRENADE' | 'EM_BULLET' | 'EM_SLASH';
+  type: 'BULLET' | 'MISSILE' | 'BEAM' | 'PLASMA' | 'BLACKHOLE' | 'ARTILLERY' | 'OSAPM_MARKER' | 'OSAPM_UP' | 'OSAPM_MINI_MISSILE' | 'SIGMA_SHELL' | 'EM_SNIPER' | 'EM_MISSILE' | 'EM_GRENADE' | 'EM_BULLET' | 'EM_SLASH' | 'SERVO_BLAST';
   position: Vector2D;
   targetId: string;
   speed: number;
@@ -202,6 +250,8 @@ export interface GameState {
   isPlaying: boolean;
   isGameOver: boolean;
   score: number;
+  servium: number;
+  servos: ServoData[];
   // Module System
   inventory: Record<number, number>; // Tier -> Count
   towerLevels: Partial<Record<TowerType, number>>; // Type -> Level
