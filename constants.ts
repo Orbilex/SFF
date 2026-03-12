@@ -86,64 +86,124 @@ export const SECTOR_THEMES = [
 ];
 
 // Procedural Path Generator
-export const generateRandomPath = (gameWidth: number, gameHeight: number, startY?: number, targetY?: number, totalWidth: number = gameWidth): Vector2D[] => {
+export const generateRandomPath = (gameWidth: number, gameHeight: number, startY?: number, targetY?: number, totalWidth: number = gameWidth, isMobile: boolean = false): Vector2D[] => {
   const points: Vector2D[] = [];
   const rows = Math.floor(gameHeight / GRID_SIZE);
+  const cols = Math.floor(gameWidth / GRID_SIZE);
   const halfGrid = GRID_SIZE / 2;
   
-  // Start Y Logic (Centered)
-  let currentY = startY !== undefined 
-      ? Math.floor(startY / GRID_SIZE) * GRID_SIZE + halfGrid
-      : Math.floor(Math.random() * (rows - 4) + 2) * GRID_SIZE + halfGrid;
-  
-  let currentX = 0;
-  points.push({ x: currentX, y: currentY });
-  
-  // Initial drop to a cell center to ensure vertical moves are on squares, not lines
-  currentX = halfGrid; 
-  points.push({ x: currentX, y: currentY });
+  if (isMobile) {
+      // Vertical Path Logic (Top to Bottom)
+      let currentX = startY !== undefined 
+          ? Math.floor(startY / GRID_SIZE) * GRID_SIZE + halfGrid // repurposing startY for startX
+          : Math.floor(Math.random() * (cols - 4) + 2) * GRID_SIZE + halfGrid;
+      
+      let currentY = 0;
+      points.push({ x: currentX, y: currentY });
+      
+      // Initial drop
+      currentY = halfGrid; 
+      points.push({ x: currentX, y: currentY });
 
-  // Max X center to turn at (Center of the last full col approx)
-  // We subtract a buffer to allow for the final exit straight line
-  const maxCenterX = Math.floor(totalWidth / GRID_SIZE) * GRID_SIZE - halfGrid; 
+      const maxCenterY = Math.floor(gameHeight / GRID_SIZE) * GRID_SIZE - halfGrid; 
 
-  while(currentX < maxCenterX) {
-      const moveX = Math.floor(Math.random() * 3 + 2) * GRID_SIZE;
-      let nextX = currentX + moveX;
-      
-      if (nextX > maxCenterX) nextX = maxCenterX;
-      
-      points.push({ x: nextX, y: currentY });
-      currentX = nextX;
-      
-      if (currentX >= maxCenterX) break;
-      
-      let nextY;
-      if (targetY !== undefined && currentX > totalWidth * 0.6) {
-          // Guide towards target (Center snapped)
-          const tY = Math.floor(targetY / GRID_SIZE) * GRID_SIZE + halfGrid;
-          const diff = tY - currentY;
-          // Move significantly towards target
-          const step = Math.sign(diff) * Math.min(Math.abs(diff), GRID_SIZE * 3);
-          nextY = currentY + step;
-      } else {
-          // Random walk (Center snapped)
-          nextY = Math.floor(Math.random() * (rows - 2) + 1) * GRID_SIZE + halfGrid;
-          while (Math.abs(nextY - currentY) < GRID_SIZE * 2) {
-               nextY = Math.floor(Math.random() * (rows - 2) + 1) * GRID_SIZE + halfGrid;
+      while(currentY < maxCenterY) {
+          // Make vertical drops longer to make path shorter overall
+          const moveY = Math.floor(Math.random() * 5 + 3) * GRID_SIZE;
+          let nextY = currentY + moveY;
+          
+          if (nextY > maxCenterY) nextY = maxCenterY;
+          
+          points.push({ x: currentX, y: nextY });
+          currentY = nextY;
+          
+          if (currentY >= maxCenterY) break;
+          
+          let nextX;
+          if (targetY !== undefined && currentY > gameHeight * 0.6) {
+              // Guide towards target (Center snapped)
+              const tX = Math.floor(targetY / GRID_SIZE) * GRID_SIZE + halfGrid; // repurposing targetY for targetX
+              const diff = tX - currentX;
+              const step = Math.sign(diff) * Math.min(Math.abs(diff), GRID_SIZE * 2); // Smaller horizontal steps
+              nextX = currentX + step;
+          } else {
+              // Random walk (Center snapped) - smaller horizontal movements
+              const direction = Math.random() > 0.5 ? 1 : -1;
+              const moveX = Math.floor(Math.random() * 2 + 1) * GRID_SIZE;
+              nextX = currentX + (direction * moveX);
+              
+              // Keep within bounds
+              if (nextX < halfGrid) nextX = halfGrid + GRID_SIZE;
+              if (nextX > gameWidth - halfGrid) nextX = gameWidth - halfGrid - GRID_SIZE;
           }
+          
+          points.push({ x: nextX, y: currentY });
+          currentX = nextX;
       }
       
-      points.push({ x: currentX, y: nextY });
-      currentY = nextY;
-  }
-  
-  // Exit point
-  if (targetY !== undefined) {
-      const snappedTargetY = Math.floor(targetY / GRID_SIZE) * GRID_SIZE + halfGrid;
-      points.push({ x: totalWidth, y: snappedTargetY });
+      // Exit point
+      if (targetY !== undefined) {
+          const snappedTargetX = Math.floor(targetY / GRID_SIZE) * GRID_SIZE + halfGrid;
+          points.push({ x: snappedTargetX, y: gameHeight });
+      } else {
+          points.push({ x: currentX, y: gameHeight });
+      }
   } else {
-      points.push({ x: totalWidth, y: currentY });
+      // Horizontal Path Logic (Left to Right)
+      // Start Y Logic (Centered)
+      let currentY = startY !== undefined 
+          ? Math.floor(startY / GRID_SIZE) * GRID_SIZE + halfGrid
+          : Math.floor(Math.random() * (rows - 4) + 2) * GRID_SIZE + halfGrid;
+      
+      let currentX = 0;
+      points.push({ x: currentX, y: currentY });
+      
+      // Initial drop to a cell center to ensure vertical moves are on squares, not lines
+      currentX = halfGrid; 
+      points.push({ x: currentX, y: currentY });
+
+      // Max X center to turn at (Center of the last full col approx)
+      // We subtract a buffer to allow for the final exit straight line
+      const maxCenterX = Math.floor(totalWidth / GRID_SIZE) * GRID_SIZE - halfGrid; 
+
+      while(currentX < maxCenterX) {
+          const moveX = Math.floor(Math.random() * 3 + 2) * GRID_SIZE;
+          let nextX = currentX + moveX;
+          
+          if (nextX > maxCenterX) nextX = maxCenterX;
+          
+          points.push({ x: nextX, y: currentY });
+          currentX = nextX;
+          
+          if (currentX >= maxCenterX) break;
+          
+          let nextY;
+          if (targetY !== undefined && currentX > totalWidth * 0.6) {
+              // Guide towards target (Center snapped)
+              const tY = Math.floor(targetY / GRID_SIZE) * GRID_SIZE + halfGrid;
+              const diff = tY - currentY;
+              // Move significantly towards target
+              const step = Math.sign(diff) * Math.min(Math.abs(diff), GRID_SIZE * 3);
+              nextY = currentY + step;
+          } else {
+              // Random walk (Center snapped)
+              nextY = Math.floor(Math.random() * (rows - 2) + 1) * GRID_SIZE + halfGrid;
+              while (Math.abs(nextY - currentY) < GRID_SIZE * 2) {
+                   nextY = Math.floor(Math.random() * (rows - 2) + 1) * GRID_SIZE + halfGrid;
+              }
+          }
+          
+          points.push({ x: currentX, y: nextY });
+          currentY = nextY;
+      }
+      
+      // Exit point
+      if (targetY !== undefined) {
+          const snappedTargetY = Math.floor(targetY / GRID_SIZE) * GRID_SIZE + halfGrid;
+          points.push({ x: totalWidth, y: snappedTargetY });
+      } else {
+          points.push({ x: totalWidth, y: currentY });
+      }
   }
   
   return points;
