@@ -38,6 +38,7 @@ interface GameCanvasProps {
   modifiers: GameState['modifiers'];
   isConMode: boolean;
   isPaused: boolean;
+  isPCVersion: boolean;
   className?: string;
   // New props for Quantum mechanic
   isQuantumSelection?: boolean;
@@ -79,6 +80,7 @@ const GameCanvas: React.FC<GameCanvasProps> = ({
   modifiers,
   isConMode,
   isPaused,
+  isPCVersion,
   className = "",
   isQuantumSelection = false,
   onQuantumUsed,
@@ -94,7 +96,7 @@ const GameCanvas: React.FC<GameCanvasProps> = ({
   const worldWidthRef = useRef(gameWidth);
 
   // Game State Refs
-  const pathsRef = useRef<Vector2D[][]>([generateRandomPath(gameWidth, gameHeight, undefined, undefined, gameWidth)]);
+  const pathsRef = useRef<Vector2D[][]>([generateRandomPath(gameWidth, gameHeight, undefined, undefined, gameWidth, !isPCVersion)]);
   const enemiesRef = useRef<Enemy[]>([]);
   const towersRef = useRef<Tower[]>([]);
   const servosRef = useRef<any[]>([]);
@@ -176,12 +178,12 @@ const GameCanvas: React.FC<GameCanvasProps> = ({
 
       if (galaxyNum === 2) {
           // Galaxy 2: Double Path (V-Shape rotated)
-          const p1 = generateRandomPath(gameWidth, gameHeight, gameHeight * 0.25, gameHeight * 0.5, newWorldWidth);
-          const p2 = generateRandomPath(gameWidth, gameHeight, gameHeight * 0.75, gameHeight * 0.5, newWorldWidth);
+          const p1 = generateRandomPath(gameWidth, gameHeight, gameHeight * 0.25, gameHeight * 0.5, newWorldWidth, !isPCVersion);
+          const p2 = generateRandomPath(gameWidth, gameHeight, gameHeight * 0.75, gameHeight * 0.5, newWorldWidth, !isPCVersion);
           return [p1, p2];
       } else {
           // Galaxy 1 or 3+: Single Path
-          return [generateRandomPath(gameWidth, gameHeight, undefined, undefined, newWorldWidth)];
+          return [generateRandomPath(gameWidth, gameHeight, undefined, undefined, newWorldWidth, !isPCVersion)];
       }
   };
 
