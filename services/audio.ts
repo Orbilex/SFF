@@ -37,6 +37,39 @@ export const stopMusic = () => {
   }
 };
 
+export const playBetterBuddyTheme = () => {
+  stopMusic();
+  if (!audioCache['/betterbuddytheme.mp3']) {
+    audioCache['/betterbuddytheme.mp3'] = new Audio('/betterbuddytheme.mp3');
+  }
+  audioCache['/betterbuddytheme.mp3'].volume = currentMusicVolume;
+  audioCache['/betterbuddytheme.mp3'].play().catch(e => console.error(e));
+};
+
+export const stopBetterBuddyTheme = () => {
+  if (audioCache['/betterbuddytheme.mp3']) {
+    audioCache['/betterbuddytheme.mp3'].pause();
+    audioCache['/betterbuddytheme.mp3'].currentTime = 0;
+  }
+  playMusic();
+};
+
+export const startBetterBuddyShootLoop = () => {
+  if (!audioCache['/betterbuddyshoot.mp3']) {
+    audioCache['/betterbuddyshoot.mp3'] = new Audio('/betterbuddyshoot.mp3');
+    audioCache['/betterbuddyshoot.mp3'].loop = true;
+  }
+  audioCache['/betterbuddyshoot.mp3'].volume = Math.max(0, Math.min(1, 2.5 * currentVolume));
+  audioCache['/betterbuddyshoot.mp3'].play().catch(e => console.error(e));
+};
+
+export const stopBetterBuddyShootLoop = () => {
+  if (audioCache['/betterbuddyshoot.mp3']) {
+    audioCache['/betterbuddyshoot.mp3'].pause();
+    audioCache['/betterbuddyshoot.mp3'].currentTime = 0;
+  }
+};
+
 const initAudio = () => {
   if (!audioCtx) {
     audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -49,9 +82,65 @@ const initAudio = () => {
   }
 };
 
-type SoundType = 'LASER' | 'PLASMA' | 'HIT' | 'EXPLOSION' | 'BUILD' | 'START' | 'ALARM' | 'ROCKET';
+type SoundType = 'LASER' | 'PLASMA' | 'HIT' | 'EXPLOSION' | 'BUILD' | 'START' | 'ALARM' | 'ROCKET' | 'BUILDER_SHOOT' | 'LOYAL_BUDDY_CONSTRUCT' | 'LOYAL_BUDDY_SHOOT' | 'LOYAL_BUDDY_RELOAD' | 'LOYAL_BUDDY_PULSE' | 'LOYAL_BUDDY_EXPLOSION' | 'BETTER_BUDDY_CONSTRUCT' | 'BETTER_BUDDY_SPAWN' | 'BETTER_BUDDY_EXPIRE' | 'BETTER_BUDDY_EXPLOSION' | 'BETTER_BUDDY_NOISE';
+
+const audioCache: Record<string, HTMLAudioElement> = {};
+
+const playAudioFile = (src: string, volume: number = 1) => {
+  if (!audioCache[src]) {
+    audioCache[src] = new Audio(src);
+  }
+  const audio = audioCache[src].cloneNode() as HTMLAudioElement;
+  audio.volume = Math.max(0, Math.min(1, volume * currentVolume));
+  audio.play().catch(e => console.error("Audio play failed:", e));
+};
 
 export const playSound = (type: SoundType) => {
+  if (type === 'BUILDER_SHOOT') {
+    playAudioFile('/builderbasicshoot.mp3', 2.5);
+    return;
+  }
+  if (type === 'LOYAL_BUDDY_CONSTRUCT') {
+    playAudioFile('/loyalbuddyconstruct.mp3', 2.5);
+    return;
+  }
+  if (type === 'LOYAL_BUDDY_SHOOT') {
+    playAudioFile('/loyalbuddyshoot.mp3', 2.5);
+    return;
+  }
+  if (type === 'LOYAL_BUDDY_RELOAD') {
+    playAudioFile('/loyalbuddyreload.mp3', 2.5);
+    return;
+  }
+  if (type === 'LOYAL_BUDDY_PULSE') {
+    playAudioFile('/loyalbuddypulse.mp3', 2.5);
+    return;
+  }
+  if (type === 'LOYAL_BUDDY_EXPLOSION') {
+    playAudioFile('/loyalbuddyexplosion.mp3', 2.5);
+    return;
+  }
+  if (type === 'BETTER_BUDDY_CONSTRUCT') {
+    playAudioFile('/betterbuddyconstruct.mp3', 2.5);
+    return;
+  }
+  if (type === 'BETTER_BUDDY_SPAWN') {
+    playAudioFile('/betterbuddyspawn.mp3', 2.5);
+    return;
+  }
+  if (type === 'BETTER_BUDDY_EXPIRE') {
+    playAudioFile('/betterbuddyexpire.mp3', 2.5);
+    return;
+  }
+  if (type === 'BETTER_BUDDY_EXPLOSION') {
+    playAudioFile('/betterbuddyexplosion.mp3', 2.5);
+    return;
+  }
+  if (type === 'BETTER_BUDDY_NOISE') {
+    playAudioFile('/betterbuddynoise.mp3', 2.5);
+    return;
+  }
+
   initAudio();
   if (!audioCtx || !masterGain) return;
 
