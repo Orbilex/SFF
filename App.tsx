@@ -1216,6 +1216,7 @@ const App: React.FC = () => {
               <GameCanvas 
                 gameWidth={mainDimensions.width}
                 gameHeight={mainDimensions.height}
+                isPCVersion={isPCVersion}
                 isPaused={isPaused}
                 selectedTower={selectedTower}
                 onPlaceTower={() => {
