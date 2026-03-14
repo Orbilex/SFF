@@ -29,8 +29,8 @@ export const SERVO_STATS = {
       {
         id: 'better_buddy',
         name: 'Better Buddy',
-        description: 'Spawns a giant mech that shoots rapid gatling missiles. Explodes after 50s dealing map-wide damage.',
-        baseUnlockCost: 20000,
+        description: 'Spawns a giant mechanical whale that shoots sonar to enemies.',
+        baseUnlockCost: 5000,
         baseChance: 0.005,
         chanceIncrement: 0.001,
         damageMultiplier: 2.0
