@@ -21,7 +21,7 @@ type ForgeState = 'IDLE' | 'EXTRACTION' | 'ANALYSIS' | 'MATERIALIZATION' | 'REVE
 const ForgeModal: React.FC<ForgeModalProps> = ({ isOpen, onClose, servium, setServium, servos, setServos, activeServo, setActiveServo }) => {
   const [forgeState, setForgeState] = useState<ForgeState>('IDLE');
   const [pulledServo, setPulledServo] = useState<ServoData | null>(null);
-  const [logs, setLogs] = useState<string[]>(['> Forge.', '> AWAITING SERVIUM INPUT...']);
+  const [logs, setLogs] = useState<string[]>(['> RECOVERY PROGRAM INITIALIZED.', '> AWAITING SERVIUM INPUT...']);
   const [stability, setStability] = useState(100);
   const [showInventory, setShowInventory] = useState(false);
 
@@ -31,7 +31,7 @@ const ForgeModal: React.FC<ForgeModalProps> = ({ isOpen, onClose, servium, setSe
     if (!isOpen) {
       setForgeState('IDLE');
       setPulledServo(null);
-      setLogs(['> Forge.', '> AWAITING SERVIUM INPUT...']);
+      setLogs(['> RECOVERY PROGRAM INITIALIZED.', '> AWAITING SERVIUM INPUT...']);
       setStability(100);
       setShowInventory(false);
       stopBetterBuddyTheme();
@@ -262,7 +262,7 @@ const ForgeModal: React.FC<ForgeModalProps> = ({ isOpen, onClose, servium, setSe
             <Activity className="animate-pulse" />
             Forge.
           </div>
-          <div className="text-xs text-cyan-800 hidden md:block tracking-widest">SYS.VER.9.4.2 // : prototype omega</div>
+          <div className="text-xs text-cyan-800 hidden md:block tracking-widest">SYS.VER.9.4.2 // : PROTOTYPE OMEGA</div>
         </div>
         <div className="flex items-center gap-4 md:gap-6">
           <button 
@@ -362,31 +362,20 @@ const ForgeModal: React.FC<ForgeModalProps> = ({ isOpen, onClose, servium, setSe
             {/* Particles / Fragments */}
             {forgeState === 'IDLE' && (
               <div className="absolute inset-0 flex items-center justify-center">
-                {Array.from({ length: 20 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="absolute text-cyan-500/30 font-mono text-sm font-bold animate-float"
-                    style={{
-                      left: `${10 + Math.random() * 80}%`,
-                      top: `${10 + Math.random() * 80}%`,
-                      animationDelay: `${Math.random() * 4}s`,
-                      animationDuration: `${2 + Math.random() * 3}s`
-                    }}
-                  >
-                    {Math.random() > 0.5 ? '1' : '0'}
-                  </div>
-                ))}
+                <div className="w-16 h-16 border-2 border-zinc-600/50 rotate-45 animate-spin-slow opacity-50" />
+                <div className="absolute w-12 h-12 border-2 border-zinc-500/50 rotate-12 animate-spin-reverse opacity-50" />
+                <div className="absolute w-8 h-8 border border-zinc-400/50 -rotate-45 animate-spin-slow opacity-50" />
               </div>
             )}
 
             {/* Extraction Lasers */}
             {(forgeState === 'EXTRACTION' || forgeState === 'ANALYSIS') && (
-              <div className={`absolute inset-0 flex justify-center overflow-hidden pointer-events-none transition-opacity duration-1000 ${forgeState === 'ANALYSIS' ? 'opacity-0' : 'opacity-100'}`}>
+              <div className="absolute inset-0 flex justify-center overflow-hidden animate-extraction-fade pointer-events-none">
                 {/* Orbital Strike Laser */}
-                <div className="w-2 h-full bg-cyan-100 shadow-[0_0_50px_#22d3ee] animate-orbital-strike origin-top z-10" />
-                <div className="absolute w-6 h-full bg-cyan-400/60 blur-md animate-orbital-strike origin-top z-0" />
-                <div className="absolute w-12 h-full bg-cyan-600/30 blur-xl animate-orbital-strike origin-top z-0" />
-                <div className="absolute w-1 h-full bg-white shadow-[0_0_20px_#fff] animate-orbital-strike-core origin-top z-20" />
+                <div className="w-8 h-full bg-cyan-100 shadow-[0_0_100px_#22d3ee] animate-orbital-strike origin-top z-10" />
+                <div className="absolute w-16 h-full bg-cyan-400/60 blur-xl animate-orbital-strike origin-top z-0" />
+                <div className="absolute w-32 h-full bg-cyan-600/30 blur-2xl animate-orbital-strike origin-top z-0" />
+                <div className="absolute w-2 h-full bg-white shadow-[0_0_50px_#fff] animate-orbital-strike-core origin-top z-20" />
                 
                 {/* Code Particles */}
                 {Array.from({ length: 40 }).map((_, i) => (
