@@ -182,8 +182,17 @@ const ArsenalModal: React.FC<ArsenalModalProps> = ({ isOpen, onClose, activeServ
                       <div className="text-sm font-bold text-cyan-400">{(currentChance * 100).toFixed(1)}%</div>
                       {isUnlocked && (
                         <>
-                          <div className="text-[10px] text-zinc-500 mt-1 mb-1">DMG MULT</div>
-                          <div className="text-sm font-bold text-red-400">x{(skill.damageMultiplier || 1) * skill.currentLevel}</div>
+                          {skill.id === 'better_buddy' ? (
+                            <>
+                              <div className="text-[10px] text-zinc-500 mt-1 mb-1">DURATION</div>
+                              <div className="text-sm font-bold text-amber-400">{20 + Math.max(0, skill.currentLevel - 1) * 10}s</div>
+                            </>
+                          ) : (
+                            <>
+                              <div className="text-[10px] text-zinc-500 mt-1 mb-1">DMG MULT</div>
+                              <div className="text-sm font-bold text-red-400">x{(skill.damageMultiplier || 1) * skill.currentLevel}</div>
+                            </>
+                          )}
                         </>
                       )}
                     </div>
