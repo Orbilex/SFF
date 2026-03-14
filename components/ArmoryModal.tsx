@@ -234,11 +234,12 @@ const DemoCanvas = ({ selectedTower }: { selectedTower: TowerType }) => {
         };
 
         const render = (time: number) => {
-            const dt = time - startTime;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            const towerX = canvas.width / 2;
+            const towerX = canvas.width / 4;
             const towerY = canvas.height / 2;
+            const enemyX = canvas.width * 3 / 4;
+            const enemyY = canvas.height / 2;
 
             let mechMode: 'MG' | 'SNIPER' | 'HAMMER' = 'MG';
             if (selectedTower === TowerType.EVERYMECH) {
@@ -248,19 +249,51 @@ const DemoCanvas = ({ selectedTower }: { selectedTower: TowerType }) => {
                 else mechMode = 'HAMMER';
             }
 
+            // Simulate firing
+            const fireInterval = Math.max(stats.cooldown, 500); // At least 500ms for demo
+            const lastFired = Math.floor(time / fireInterval) * fireInterval;
+            const timeSinceFire = time - lastFired;
+
             const dummyTower: Tower = {
                 id: 'demo',
                 type: selectedTower,
                 position: { x: towerX, y: towerY },
                 level: 1,
-                lastFired: time - 100000,
-                angle: -Math.PI / 8,
+                lastFired: lastFired,
+                angle: 0,
                 mechMode: mechMode,
                 range: stats.range,
                 damage: stats.damage,
                 cooldown: stats.cooldown,
-                targetId: null
+                targetId: 'dummy_enemy'
             };
+
+            const dummyEnemy: Enemy = {
+                id: 'dummy_enemy',
+                position: { x: enemyX, y: enemyY },
+                hp: 100,
+                maxHp: 100,
+                radius: 15,
+                speed: 0,
+                color: '#ef4444',
+                tier: 1,
+                shape: EnemyShape.ORB,
+                traits: [],
+                frozenFactor: 1,
+                damageFlashTimer: timeSinceFire < 100 ? 100 : 0,
+                stunTimer: 0,
+                irradiatedTimer: 0,
+                pathIndex: 0
+            };
+
+            // Draw Enemy
+            drawProceduralEnemy(ctx, dummyEnemy, time, false);
+
+            // Draw Projectile
+            if (timeSinceFire < 200 && selectedTower !== TowerType.LASER) {
+                const progress = timeSinceFire / 200;
+                drawProjectile(ctx, selectedTower, progress, towerX, towerY, enemyX, enemyY);
+            }
 
             // Draw Tower
             drawTower3D(ctx, dummyTower, time);
