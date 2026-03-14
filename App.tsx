@@ -48,6 +48,7 @@ const App: React.FC = () => {
   const [isServoPlaced, setIsServoPlaced] = useState(false);
   const [selectedServoForPlacement, setSelectedServoForPlacement] = useState<any | null>(null);
   const [forceActivateSkillId, setForceActivateSkillId] = useState<string | null>(null);
+  const [skillStates, setSkillStates] = useState<Record<string, any>>({});
   const [selectedTower, setSelectedTower] = useState<TowerType | null>(null);
   const [selectedSlotIndex, setSelectedSlotIndex] = useState<number | null>(null);
   const [tacticalLog, setTacticalLog] = useState<string[]>(["Commander, systems online. Waiting for enemy signatures."]);
@@ -92,6 +93,7 @@ const App: React.FC = () => {
   const [isArsenalOpen, setIsArsenalOpen] = useState(false);
   const [isPCVersion, setIsPCVersion] = useState(true);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isCreditsOpen, setIsCreditsOpen] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [musicVol, setMusicVol] = useState(0.3);
   const [sfxVol, setSfxVol] = useState(0.1);
@@ -614,6 +616,14 @@ const App: React.FC = () => {
                             </div>
                         </>
                     )}
+                    <div className="h-px w-full bg-white/10 my-1"></div>
+                    <button 
+                        onClick={() => { setIsCreditsOpen(true); setIsSettingsOpen(false); }}
+                        className="flex items-center gap-2 w-full px-3 py-2 text-xs text-zinc-300 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors"
+                    >
+                        <Star size={16} className="text-yellow-400" />
+                        <span>Credits</span>
+                    </button>
                 </div>
             )}
         </div>
@@ -696,6 +706,55 @@ const App: React.FC = () => {
           activeServo={activeServo} 
           setActiveServo={setActiveServo} 
         />
+
+        {/* CREDITS MODAL */}
+        {isCreditsOpen && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+            <div className="bg-zinc-900 border border-cyan-500/30 p-8 rounded-2xl shadow-[0_0_50px_rgba(6,182,212,0.2)] max-w-md w-full relative overflow-hidden flex flex-col max-h-[80vh]">
+              <div className="absolute top-0 left-0 w-full h-1 bg-cyan-500 shadow-[0_0_10px_#06b6d4]"></div>
+              
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-black text-white tracking-widest flex items-center gap-3">
+                  <Star size={24} className="text-yellow-400" /> CREDITS
+                </h2>
+                <button onClick={() => setIsCreditsOpen(false)} className="text-zinc-500 hover:text-white transition-colors">
+                  <X size={24} />
+                </button>
+              </div>
+              
+              <div className="w-full h-px bg-zinc-700 mb-6"></div>
+              
+              <div className="overflow-y-auto pr-2 custom-scrollbar space-y-6 text-sm text-zinc-300">
+                <div>
+                  <h3 className="text-cyan-400 font-bold uppercase tracking-wider mb-1">Lead Software Engineer</h3>
+                  <p className="font-bold text-white">Michael A.</p>
+                  <p className="text-xs text-zinc-400 mt-1">System Architecture, Gameplay Logic, and Integration.</p>
+                </div>
+                
+                <div>
+                  <h3 className="text-cyan-400 font-bold uppercase tracking-wider mb-1">Development Methodology</h3>
+                  <p className="font-bold text-white">AI-Assisted Engineering: Developed in collaboration with Gemini.</p>
+                  <p className="text-xs text-zinc-400 mt-1">Leveraged Large Language Models (LLMs) for rapid prototyping, code optimization, and iterative "vibe coding" workflows.</p>
+                </div>
+                
+                <div>
+                  <h3 className="text-cyan-400 font-bold uppercase tracking-wider mb-1">Audio & Multimedia</h3>
+                  <p className="font-bold text-white">Sound Design & Scoring: Assets sourced via Pixabay under the Content License.</p>
+                  <p className="text-xs text-zinc-400 mt-1">Audio Implementation: Custom-engineered Audio Synthesis Engine for dynamic sound generation.</p>
+                </div>
+              </div>
+              
+              <div className="mt-8">
+                <button 
+                  onClick={() => setIsCreditsOpen(false)}
+                  className="bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-3 px-8 rounded-xl w-full transition-all border border-white/10 uppercase tracking-widest"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -1231,6 +1290,7 @@ const App: React.FC = () => {
                 activeServo={activeServo}
                 forceActivateSkillId={forceActivateSkillId}
                 onSkillActivated={() => setForceActivateSkillId(null)}
+                onSkillStateUpdate={setSkillStates}
                 onMoneyChange={setMoney}
                 onLivesChange={setLives}
                 onWaveChange={handleWaveChange}
@@ -1288,39 +1348,151 @@ const App: React.FC = () => {
                       <div className="flex gap-2">
                         {activeServo.skills.map((skill: any, idx: number) => {
                           const isUnlocked = skill.currentLevel > 0;
+                          const isUlt = skill.id === 'better_buddy';
+                          const state = skillStates[skill.id] || {};
+                          
+                          let cost = 0;
+                          let canAfford = false;
+                          let progress = 0;
+                          let isReady = false;
+                          let cooldownPct = 0;
+
+                          let isUltActive = false;
+                          let activePct = 0;
+
+                          if (isUlt) {
+                            progress = state.progress || 0;
+                            isReady = progress >= 100;
+                            canAfford = isReady;
+                            isUltActive = state.isActive || false;
+                            activePct = state.activePct || 0;
+                          } else {
+                            cost = state.cost || 2500;
+                            canAfford = money >= cost;
+                            cooldownPct = state.cooldown ? (state.cooldown / 25000) * 100 : 0;
+                          }
+
+                          let btnClass = "";
+                          let iconColor = "";
+                          let textColor = "";
+                          let ringColor = "";
+                          let badgeClass = "";
+
+                          if (!isUnlocked) {
+                            btnClass = "bg-zinc-900/40 border-zinc-800 opacity-50 grayscale cursor-not-allowed";
+                            iconColor = "text-zinc-600";
+                            textColor = "text-zinc-600";
+                            ringColor = "stroke-zinc-800";
+                            badgeClass = "border-zinc-800 text-zinc-600";
+                          } else if (isUlt) {
+                            if (isUltActive) {
+                              btnClass = "bg-cyan-950/40 border-cyan-500/50 shadow-[0_0_15px_rgba(6,182,212,0.3)] cursor-not-allowed";
+                              iconColor = "text-cyan-400";
+                              textColor = "text-cyan-400";
+                              ringColor = "stroke-cyan-400";
+                              badgeClass = "border-cyan-500 text-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.5)] animate-pulse";
+                            } else if (isReady) {
+                              btnClass = "bg-amber-950/40 border-amber-500/50 shadow-[0_0_15px_rgba(245,158,11,0.3)] hover:bg-amber-900/40 hover:shadow-[0_0_25px_rgba(245,158,11,0.5)] active:scale-95 cursor-pointer";
+                              iconColor = "text-amber-400";
+                              textColor = "text-amber-400";
+                              ringColor = "stroke-amber-400";
+                              badgeClass = "border-amber-500 text-amber-400 shadow-[0_0_10px_rgba(245,158,11,0.5)]";
+                            } else {
+                              btnClass = "bg-zinc-900/60 border-amber-900/30 opacity-80 cursor-not-allowed";
+                              iconColor = "text-amber-700";
+                              textColor = "text-amber-700";
+                              ringColor = "stroke-amber-500";
+                              badgeClass = "border-zinc-700 text-amber-500/80";
+                            }
+                          } else {
+                            if (canAfford) {
+                              btnClass = "bg-purple-950/40 border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:bg-purple-900/40 hover:shadow-[0_0_25px_rgba(168,85,247,0.5)] active:scale-95 cursor-pointer";
+                              iconColor = "text-purple-400";
+                              textColor = "text-purple-400";
+                              ringColor = "stroke-purple-400";
+                              badgeClass = "border-purple-500 text-purple-300 shadow-[0_0_10px_rgba(168,85,247,0.4)]";
+                            } else {
+                              btnClass = "bg-red-950/20 border-red-900/30 opacity-60 cursor-not-allowed";
+                              iconColor = "text-red-500";
+                              textColor = "text-red-500";
+                              ringColor = "stroke-red-500";
+                              badgeClass = "border-red-900 text-red-500";
+                            }
+                          }
+
                           return (
-                            <button
-                              key={skill.id}
-                              disabled={!isUnlocked}
-                              onClick={() => {
-                                const cost = 500;
-                                if (money >= cost) {
-                                  setMoney(prev => prev - cost);
-                                  setForceActivateSkillId(skill.id);
-                                } else {
-                                  addLog(`Not enough credits to force activate ${skill.name}. Needs ${cost}.`);
-                                }
-                              }}
-                              className={`w-16 h-20 rounded-xl flex flex-col items-center justify-center gap-1 border transition-all duration-200 relative group flex-shrink-0
-                                ${isUnlocked 
-                                  ? (money >= 500 ? 'bg-purple-900/20 border-purple-500/30 hover:bg-purple-900/40 active:scale-95 cursor-pointer' : 'bg-red-900/20 border-red-500/30 opacity-50 cursor-not-allowed')
-                                  : 'bg-zinc-900/20 border-transparent opacity-40 grayscale cursor-not-allowed'
-                                }
-                              `}
-                            >
-                              <div className={`absolute top-0 left-0 w-full text-center text-[8px] font-bold text-white/50 rounded-t-xl py-0.5 ${isUnlocked && money < 500 ? 'bg-red-500/20' : 'bg-purple-500/20'}`}>
-                                SKILL {idx + 1}
-                              </div>
-                              <Zap size={16} className={isUnlocked ? (money >= 500 ? 'text-purple-400' : 'text-red-400') : 'text-zinc-500'} />
-                              <div className={`text-[8px] font-bold uppercase mt-1 text-center leading-tight px-1 ${isUnlocked ? (money >= 500 ? 'text-purple-400' : 'text-red-400') : 'text-zinc-500'}`}>
-                                {skill.name}
-                              </div>
-                              {isUnlocked && (
-                                <div className="absolute -top-2 -right-2 bg-zinc-900 border border-purple-500/30 rounded-full px-1.5 py-0.5 text-[8px] text-purple-300 font-mono">
-                                  $500
+                            <div key={skill.id} className="relative group flex-shrink-0 pt-2 pb-2 px-1">
+                              <button
+                                disabled={!isUnlocked || (isUlt && (!isReady || isUltActive))}
+                                onClick={() => {
+                                  if (isUlt) {
+                                    if (isReady && !isUltActive) {
+                                      setForceActivateSkillId(skill.id);
+                                    }
+                                  } else {
+                                    if (canAfford) {
+                                      setMoney(prev => prev - cost);
+                                      setForceActivateSkillId(skill.id);
+                                    } else {
+                                      addLog(`Not enough credits to force activate ${skill.name}. Needs ${cost}.`);
+                                    }
+                                  }
+                                }}
+                                className={`relative w-20 h-20 rounded-2xl flex flex-col items-center justify-center gap-1 transition-all duration-150 outline-none select-none border backdrop-blur-md overflow-hidden ${btnClass}`}
+                              >
+                                {/* SVG Progress/Cooldown - Rounded Rectangle */}
+                                <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full -rotate-90 pointer-events-none">
+                                  <rect x="2" y="2" width="96" height="96" rx="16" ry="16" fill="none" className="stroke-white/5" strokeWidth="4" />
+                                  
+                                  {isUnlocked && !isUlt && cooldownPct > 0 && (
+                                    <rect x="2" y="2" width="96" height="96" rx="16" ry="16" fill="none" strokeWidth="4" 
+                                      strokeDasharray="356.53" strokeDashoffset={356.53 * (1 - cooldownPct / 100)} 
+                                      className={`transition-all duration-100 ${ringColor}`} strokeLinecap="round" />
+                                  )}
+                                  {isUnlocked && isUlt && !isReady && !isUltActive && (
+                                    <rect x="2" y="2" width="96" height="96" rx="16" ry="16" fill="none" strokeWidth="4" 
+                                      strokeDasharray="356.53" strokeDashoffset={356.53 * (1 - progress / 100)} 
+                                      className={`transition-all duration-100 ${ringColor}`} strokeLinecap="round" />
+                                  )}
+                                  {isUnlocked && isUlt && isUltActive && (
+                                    <rect x="2" y="2" width="96" height="96" rx="16" ry="16" fill="none" strokeWidth="4" 
+                                      strokeDasharray="356.53" strokeDashoffset={356.53 * (1 - activePct / 100)} 
+                                      className={`transition-all duration-100 ${ringColor}`} strokeLinecap="round" />
+                                  )}
+                                </svg>
+
+                                {/* High-tech extra rings for Ult */}
+                                {isUnlocked && isUlt && (
+                                  <div className="absolute inset-0 w-full h-full pointer-events-none flex items-center justify-center">
+                                    <div className={`w-12 h-12 rounded-full border border-dashed ${isUltActive ? 'border-cyan-500/50 animate-[spin_4s_linear_infinite]' : (isReady ? 'border-amber-500/50 animate-[spin_8s_linear_infinite]' : 'border-amber-500/10')}`} />
+                                    <div className={`absolute w-8 h-8 rounded-full border border-dotted ${isUltActive ? 'border-cyan-400/40 animate-[spin_3s_linear_infinite_reverse]' : (isReady ? 'border-amber-400/40 animate-[spin_6s_linear_infinite_reverse]' : 'border-amber-500/5')}`} />
+                                  </div>
+                                )}
+
+                                <Zap size={20} className={`z-10 drop-shadow-md ${iconColor}`} />
+                                
+                                <div className={`text-[9px] font-black uppercase text-center leading-tight px-1 z-10 tracking-wider drop-shadow-md whitespace-pre-line ${textColor}`}>
+                                  {isUlt ? (isUltActive ? 'ACTIVE' : 'BETTER\nBUDDY') : 'LOYAL\nBUDDY'}
+                                </div>
+                              </button>
+
+                              {/* Badges placed outside button to avoid clipping */}
+                              {isUnlocked && !isUlt && (
+                                <div className={`absolute -top-1 -right-1 bg-zinc-950 border rounded-md px-1.5 py-0.5 text-[10px] font-mono font-bold z-20 ${badgeClass}`}>
+                                  ${cost}
                                 </div>
                               )}
-                            </button>
+                              {isUnlocked && isUlt && !isUltActive && (
+                                <div className={`absolute -top-1 -right-1 bg-zinc-950 border rounded-md px-1.5 py-0.5 text-[10px] font-mono font-bold z-20 ${badgeClass}`}>
+                                  {isReady ? 'RDY' : `${Math.floor(progress)}%`}
+                                </div>
+                              )}
+                              {isUnlocked && isUlt && isUltActive && (
+                                <div className={`absolute -top-1 -right-1 bg-zinc-950 border rounded-md px-1.5 py-0.5 text-[10px] font-mono font-bold z-20 ${badgeClass}`}>
+                                  {state.activeSec || 0}s
+                                </div>
+                              )}
+                            </div>
                           );
                         })}
                       </div>
