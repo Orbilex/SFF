@@ -6,6 +6,7 @@ let currentVolume = 0.1; // Lower default volume
 
 let musicAudio: HTMLAudioElement | null = null;
 let currentMusicVolume = 0.3;
+let isGameMusicActive = false;
 
 export const setVolume = (vol: number) => {
   currentVolume = vol;
@@ -22,6 +23,7 @@ export const setMusicVolume = (vol: number) => {
 };
 
 export const playMusic = () => {
+  isGameMusicActive = true;
   if (!musicAudio) {
     musicAudio = new Audio('/servoframefield.mp3');
     musicAudio.loop = true;
@@ -31,6 +33,7 @@ export const playMusic = () => {
 };
 
 export const stopMusic = () => {
+  isGameMusicActive = false;
   if (musicAudio) {
     musicAudio.pause();
     musicAudio.currentTime = 0;
@@ -38,7 +41,10 @@ export const stopMusic = () => {
 };
 
 export const playBetterBuddyTheme = () => {
-  stopMusic();
+  if (musicAudio) {
+    musicAudio.pause();
+    musicAudio.currentTime = 0;
+  }
   if (!audioCache['/betterbuddytheme.mp3']) {
     audioCache['/betterbuddytheme.mp3'] = new Audio('/betterbuddytheme.mp3');
   }
@@ -51,7 +57,9 @@ export const stopBetterBuddyTheme = () => {
     audioCache['/betterbuddytheme.mp3'].pause();
     audioCache['/betterbuddytheme.mp3'].currentTime = 0;
   }
-  playMusic();
+  if (isGameMusicActive) {
+    playMusic();
+  }
 };
 
 export const startBetterBuddyShootLoop = () => {
@@ -82,7 +90,7 @@ const initAudio = () => {
   }
 };
 
-type SoundType = 'LASER' | 'PLASMA' | 'HIT' | 'EXPLOSION' | 'BUILD' | 'START' | 'ALARM' | 'ROCKET' | 'BUILDER_SHOOT' | 'LOYAL_BUDDY_CONSTRUCT' | 'LOYAL_BUDDY_SHOOT' | 'LOYAL_BUDDY_RELOAD' | 'LOYAL_BUDDY_PULSE' | 'LOYAL_BUDDY_EXPLOSION' | 'BETTER_BUDDY_CONSTRUCT' | 'BETTER_BUDDY_SPAWN' | 'BETTER_BUDDY_EXPIRE' | 'BETTER_BUDDY_EXPLOSION' | 'BETTER_BUDDY_NOISE';
+type SoundType = 'LASER' | 'PLASMA' | 'HIT' | 'EXPLOSION' | 'BUILD' | 'START' | 'ALARM' | 'ROCKET' | 'BUILDER_SHOOT' | 'LOYAL_BUDDY_CONSTRUCT' | 'LOYAL_BUDDY_SHOOT' | 'LOYAL_BUDDY_RELOAD' | 'LOYAL_BUDDY_PULSE' | 'LOYAL_BUDDY_EXPLOSION' | 'BETTER_BUDDY_CONSTRUCT' | 'BETTER_BUDDY_SPAWN' | 'BETTER_BUDDY_EXPIRE' | 'BETTER_BUDDY_EXPLOSION' | 'BETTER_BUDDY_NOISE' | 'FORGE_EXTRACTION' | 'FORGE_ANALYSIS' | 'FORGE_MATERIALIZATION';
 
 const audioCache: Record<string, HTMLAudioElement> = {};
 
@@ -96,6 +104,18 @@ const playAudioFile = (src: string, volume: number = 1) => {
 };
 
 export const playSound = (type: SoundType) => {
+  if (type === 'FORGE_EXTRACTION') {
+    playAudioFile('/forgeextraction.mp3', 2.5);
+    return;
+  }
+  if (type === 'FORGE_ANALYSIS') {
+    playAudioFile('/forgeanalyzing.mp3', 2.5);
+    return;
+  }
+  if (type === 'FORGE_MATERIALIZATION') {
+    playAudioFile('/forgematerialization.mp3', 2.5);
+    return;
+  }
   if (type === 'BUILDER_SHOOT') {
     playAudioFile('/builderbasicshoot.mp3', 2.5);
     return;
