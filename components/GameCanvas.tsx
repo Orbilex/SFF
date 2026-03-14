@@ -2543,17 +2543,17 @@ const GameCanvas: React.FC<GameCanvasProps> = ({
                   const scale = proj.ammoType === 'SPECIAL' ? 4 : 2; ctx.scale(scale, scale); 
                   if (proj.ammoType === 'SPECIAL') {
                      const grad = ctx.createLinearGradient(-8, 0, 8, 0); grad.addColorStop(0, '#475569'); grad.addColorStop(0.5, '#0f172a'); grad.addColorStop(1, '#020617'); ctx.fillStyle = grad;
-                     ctx.beginPath(); ctx.moveTo(-6, 10); ctx.lineTo(6, 10); ctx.lineTo(7, -10); ctx.lineTo(-7, -10); ctx.fill();
-                     const headGrad = ctx.createLinearGradient(0, -25, 0, -10); headGrad.addColorStop(0, '#fff7ed'); headGrad.addColorStop(0.4, '#f97316'); headGrad.addColorStop(1, '#7c2d12'); ctx.fillStyle = headGrad;
-                     ctx.beginPath(); ctx.moveTo(-7, -10); ctx.lineTo(7, -10); ctx.lineTo(0, -25); ctx.fill();
+                     ctx.beginPath(); ctx.moveTo(-6, 20); ctx.lineTo(6, 20); ctx.lineTo(7, -20); ctx.lineTo(-7, -20); ctx.fill();
+                     const headGrad = ctx.createLinearGradient(0, -40, 0, -20); headGrad.addColorStop(0, '#fff7ed'); headGrad.addColorStop(0.4, '#f97316'); headGrad.addColorStop(1, '#7c2d12'); ctx.fillStyle = headGrad;
+                     ctx.beginPath(); ctx.moveTo(-7, -20); ctx.lineTo(7, -20); ctx.lineTo(0, -45); ctx.fill();
                      ctx.fillStyle = '#1e293b'; ctx.strokeStyle = '#475569'; ctx.lineWidth = 0.5;
-                     ctx.beginPath(); ctx.moveTo(-6, 0); ctx.lineTo(-16, 10); ctx.lineTo(-6, 10); ctx.fill(); ctx.stroke();
-                     ctx.beginPath(); ctx.moveTo(6, 0); ctx.lineTo(16, 10); ctx.lineTo(6, 10); ctx.fill(); ctx.stroke();
-                     const pulse = Math.abs(Math.sin(time * 0.01)); ctx.fillStyle = `rgba(249, 115, 22, ${0.5 + pulse * 0.5})`; ctx.shadowColor = '#f97316'; ctx.shadowBlur = 15; ctx.fillRect(-2, -8, 4, 16); ctx.shadowBlur = 0;
+                     ctx.beginPath(); ctx.moveTo(-6, 0); ctx.lineTo(-16, 15); ctx.lineTo(-6, 15); ctx.fill(); ctx.stroke();
+                     ctx.beginPath(); ctx.moveTo(6, 0); ctx.lineTo(16, 15); ctx.lineTo(6, 15); ctx.fill(); ctx.stroke();
+                     const pulse = Math.abs(Math.sin(time * 0.01)); ctx.fillStyle = `rgba(249, 115, 22, ${0.5 + pulse * 0.5})`; ctx.shadowColor = '#f97316'; ctx.shadowBlur = 15; ctx.fillRect(-2, -15, 4, 30); ctx.shadowBlur = 0;
                   } else {
-                    ctx.fillStyle = '#e2e8f0'; ctx.fillRect(-6, -15, 12, 30);
-                    ctx.fillStyle = '#cbd5e1'; ctx.beginPath(); ctx.moveTo(-6, -15); ctx.lineTo(6, -15); ctx.lineTo(0, -30); ctx.fill();
-                    ctx.fillStyle = '#64748b'; ctx.beginPath(); ctx.moveTo(-6, 10); ctx.lineTo(-14, 15); ctx.lineTo(-6, 15); ctx.fill(); ctx.beginPath(); ctx.moveTo(6, 10); ctx.lineTo(14, 15); ctx.lineTo(6, 15); ctx.fill();
+                    ctx.fillStyle = '#e2e8f0'; ctx.fillRect(-6, -25, 12, 50);
+                    ctx.fillStyle = '#cbd5e1'; ctx.beginPath(); ctx.moveTo(-6, -25); ctx.lineTo(6, -25); ctx.lineTo(0, -45); ctx.fill();
+                    ctx.fillStyle = '#64748b'; ctx.beginPath(); ctx.moveTo(-6, 20); ctx.lineTo(-14, 30); ctx.lineTo(-6, 25); ctx.fill(); ctx.beginPath(); ctx.moveTo(6, 20); ctx.lineTo(14, 30); ctx.lineTo(6, 25); ctx.fill();
                     ctx.fillStyle = '#ef4444'; ctx.fillRect(-6, -5, 12, 2); ctx.fillStyle = '#1e293b'; ctx.font = '3px monospace'; ctx.fillText("PLUTON", -5, 5);
                   }
              }
@@ -2561,19 +2561,19 @@ const GameCanvas: React.FC<GameCanvasProps> = ({
             ctx.translate(proj.position.x, proj.position.y); const scale = proj.ammoType === 'SPECIAL' ? 4 : 2; ctx.scale(scale, scale); ctx.shadowBlur = 15; ctx.shadowColor = proj.color;
             if (proj.ammoType === 'SPECIAL') {
                 const grad = ctx.createLinearGradient(-8, 0, 8, 0); grad.addColorStop(0, '#475569'); grad.addColorStop(0.5, '#0f172a'); grad.addColorStop(1, '#020617'); ctx.fillStyle = grad;
-                ctx.beginPath(); ctx.moveTo(-6, 10); ctx.lineTo(6, 10); ctx.lineTo(7, -10); ctx.lineTo(-7, -10); ctx.fill();
-                const headGrad = ctx.createLinearGradient(0, -25, 0, -10); headGrad.addColorStop(0, '#fff7ed'); headGrad.addColorStop(0.4, '#f97316'); headGrad.addColorStop(1, '#7c2d12'); ctx.fillStyle = headGrad;
-                ctx.beginPath(); ctx.moveTo(-7, -10); ctx.lineTo(7, -10); ctx.lineTo(0, -25); ctx.fill();
+                ctx.beginPath(); ctx.moveTo(-6, 20); ctx.lineTo(6, 20); ctx.lineTo(7, -20); ctx.lineTo(-7, -20); ctx.fill();
+                const headGrad = ctx.createLinearGradient(0, -40, 0, -20); headGrad.addColorStop(0, '#fff7ed'); headGrad.addColorStop(0.4, '#f97316'); headGrad.addColorStop(1, '#7c2d12'); ctx.fillStyle = headGrad;
+                ctx.beginPath(); ctx.moveTo(-7, -20); ctx.lineTo(7, -20); ctx.lineTo(0, -45); ctx.fill();
                 ctx.fillStyle = '#1e293b'; ctx.strokeStyle = '#475569'; ctx.lineWidth = 0.5;
-                ctx.beginPath(); ctx.moveTo(-6, 0); ctx.lineTo(-16, 10); ctx.lineTo(-6, 10); ctx.fill(); ctx.stroke();
-                ctx.beginPath(); ctx.moveTo(6, 0); ctx.lineTo(16, 10); ctx.lineTo(6, 10); ctx.fill(); ctx.stroke();
-                const pulse = Math.abs(Math.sin(time * 0.01)); ctx.fillStyle = `rgba(249, 115, 22, ${0.5 + pulse * 0.5})`; ctx.shadowColor = '#f97316'; ctx.shadowBlur = 15; ctx.fillRect(-2, -8, 4, 16); ctx.shadowBlur = 0;
+                ctx.beginPath(); ctx.moveTo(-6, 0); ctx.lineTo(-16, 15); ctx.lineTo(-6, 15); ctx.fill(); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(6, 0); ctx.lineTo(16, 15); ctx.lineTo(6, 15); ctx.fill(); ctx.stroke();
+                const pulse = Math.abs(Math.sin(time * 0.01)); ctx.fillStyle = `rgba(249, 115, 22, ${0.5 + pulse * 0.5})`; ctx.shadowColor = '#f97316'; ctx.shadowBlur = 15; ctx.fillRect(-2, -15, 4, 30); ctx.shadowBlur = 0;
             } else {
-                ctx.fillStyle = '#e2e8f0'; ctx.fillRect(-5, -12, 10, 24); ctx.fillStyle = '#cbd5e1'; ctx.beginPath(); ctx.moveTo(-5, -12); ctx.lineTo(5, -12); ctx.lineTo(0, -22); ctx.fill();
-                ctx.fillStyle = '#64748b'; ctx.beginPath(); ctx.moveTo(-5, 8); ctx.lineTo(-12, 15); ctx.lineTo(-5, 12); ctx.fill(); ctx.beginPath(); ctx.moveTo(5, 8); ctx.lineTo(12, 15); ctx.lineTo(5, 12); ctx.fill();
+                ctx.fillStyle = '#e2e8f0'; ctx.fillRect(-5, -20, 10, 40); ctx.fillStyle = '#cbd5e1'; ctx.beginPath(); ctx.moveTo(-5, -20); ctx.lineTo(5, -20); ctx.lineTo(0, -35); ctx.fill();
+                ctx.fillStyle = '#64748b'; ctx.beginPath(); ctx.moveTo(-5, 15); ctx.lineTo(-12, 25); ctx.lineTo(-5, 20); ctx.fill(); ctx.beginPath(); ctx.moveTo(5, 15); ctx.lineTo(12, 25); ctx.lineTo(5, 20); ctx.fill();
                 ctx.fillStyle = '#ef4444'; ctx.fillRect(-5, 0, 10, 2);
             }
-            ctx.shadowBlur = 20; ctx.shadowColor = '#f97316'; ctx.fillStyle = '#f97316'; ctx.beginPath(); ctx.moveTo(-4, 10); ctx.lineTo(4, 10); ctx.lineTo(0, 25 + Math.random() * 10); ctx.fill();
+            ctx.shadowBlur = 20; ctx.shadowColor = '#f97316'; ctx.fillStyle = '#f97316'; ctx.beginPath(); ctx.moveTo(-4, 20); ctx.lineTo(4, 20); ctx.lineTo(0, 40 + Math.random() * 10); ctx.fill();
         } else if (proj.type === 'BLACKHOLE') {
              ctx.shadowBlur = proj.isGiant ? 50 : 20; ctx.shadowColor = proj.isGiant ? '#fff' : '#3b82f6';
              ctx.fillStyle = '#020617'; ctx.beginPath(); ctx.arc(proj.position.x, proj.position.y, proj.radius, 0, Math.PI * 2); ctx.fill();
@@ -3713,140 +3713,38 @@ const GameCanvas: React.FC<GameCanvasProps> = ({
           const animTime = time - tower.lastFired; 
           let launcherAngle = 0; 
           const fireRecoil = animTime < 500 ? Math.sin(animTime * 0.02) * 3 : 0; 
-          const isIdle = animTime >= 2000 && animTime <= 18000;
-          
-          // Smooth idle breathing/scanning
-          let idleScan = 0;
-          if (isIdle) {
-              // Smoothly blend into and out of the idle scan
-              const blendIn = Math.min(1, (animTime - 2000) / 1000);
-              const blendOut = Math.min(1, (18000 - animTime) / 1000);
-              const blend = Math.min(blendIn, blendOut);
-              idleScan = Math.sin(time * 0.001) * 0.15 * blend;
-          }
-
-          if (animTime > 18000) { 
-              const raiseProgress = Math.min(1, (animTime - 18000) / 5000); 
-              const ease = raiseProgress < 0.5 ? 2 * raiseProgress * raiseProgress : -1 + (4 - 2 * raiseProgress) * raiseProgress; 
-              launcherAngle = ease * (Math.PI / 2); 
-          } else if (animTime < 2000) { 
-              const lowerProgress = animTime / 2000;
-              const ease = lowerProgress < 0.5 ? 2 * lowerProgress * lowerProgress : -1 + (4 - 2 * lowerProgress) * lowerProgress;
-              launcherAngle = (Math.PI / 2) * (1 - ease); 
-          } else { 
-              launcherAngle = idleScan; 
-          } 
-
-          // Engine vibration when idle
-          const engineVibe = isIdle ? Math.sin(time * 0.05) * 0.3 : 0;
-          ctx.translate(0, engineVibe);
-
-          // Treads
+          if (animTime > 18000) { const raiseProgress = Math.min(1, (animTime - 18000) / 5000); const ease = raiseProgress < 0.5 ? 2 * raiseProgress * raiseProgress : -1 + (4 - 2 * raiseProgress) * raiseProgress; launcherAngle = ease * (Math.PI / 2); } else if (animTime < 2000) { launcherAngle = (Math.PI / 2) * (1 - (animTime / 2000)); } else { launcherAngle = 0; } 
           ctx.fillStyle = '#1e293b'; ctx.beginPath(); ctx.roundRect(-28, -18, 56, 8, 2); ctx.fill(); ctx.beginPath(); ctx.roundRect(-28, 10, 56, 8, 2); ctx.fill(); 
-          
-          // Wheels with subtle rotation effect
-          ctx.fillStyle = '#0f172a'; 
-          for(let i=0; i<6; i++) { 
-              const wx = -20 + (i * 8); 
-              ctx.save();
-              ctx.translate(wx, -14);
-              if (isIdle) ctx.rotate(time * 0.002 + i);
-              ctx.beginPath(); ctx.arc(0, 0, 2.5, 0, Math.PI*2); ctx.fill(); 
-              ctx.fillStyle = '#334155'; ctx.fillRect(-1, -1, 2, 2); ctx.fillStyle = '#0f172a';
-              ctx.restore();
-
-              ctx.save();
-              ctx.translate(wx, 14);
-              if (isIdle) ctx.rotate(time * 0.002 + i);
-              ctx.beginPath(); ctx.arc(0, 0, 2.5, 0, Math.PI*2); ctx.fill(); 
-              ctx.fillStyle = '#334155'; ctx.fillRect(-1, -1, 2, 2); ctx.fillStyle = '#0f172a';
-              ctx.restore();
-          } 
-          
-          // Main Body
+          ctx.fillStyle = '#0f172a'; for(let i=0; i<6; i++) { const wx = -20 + (i * 8); ctx.beginPath(); ctx.arc(wx, -14, 2.5, 0, Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.arc(wx, 14, 2.5, 0, Math.PI*2); ctx.fill(); } 
           ctx.fillStyle = '#f8fafc'; ctx.beginPath(); ctx.moveTo(-32, -8); ctx.lineTo(-20, -14); ctx.lineTo(28, -14); ctx.lineTo(32, -6); ctx.lineTo(32, 6); ctx.lineTo(28, 14); ctx.lineTo(-20, 14); ctx.lineTo(-32, 8); ctx.closePath(); ctx.fill(); 
-          
-          // High-quality body details (Armor plates, glowing vents)
-          ctx.fillStyle = '#cbd5e1'; ctx.beginPath(); ctx.moveTo(-28, -6); ctx.lineTo(-18, -12); ctx.lineTo(26, -12); ctx.lineTo(30, -4); ctx.lineTo(30, 4); ctx.lineTo(26, 12); ctx.lineTo(-18, 12); ctx.lineTo(-28, 6); ctx.closePath(); ctx.fill();
-          
-          // Glowing energy core/vents that pulse fluidly
-          const corePulse = (Math.sin(time * 0.003) + 1) / 2;
-          ctx.fillStyle = `rgba(14, 165, 233, ${0.4 + corePulse * 0.6})`;
-          ctx.shadowColor = '#0ea5e9'; ctx.shadowBlur = 8 + corePulse * 8;
-          ctx.fillRect(-10, -8, 16, 2);
-          ctx.fillRect(-10, 6, 16, 2);
-          ctx.shadowBlur = 0;
-
           ctx.fillStyle = '#f97316'; ctx.beginPath(); ctx.moveTo(-25, -8); ctx.lineTo(-15, -14); ctx.lineTo(-12, -14); ctx.lineTo(-22, -8); ctx.fill(); ctx.fillRect(20, -14, 4, 28); 
           
-          // --- Secondary Small Missile Launcher ---
+          // --- Secondary Small Missile Launcher (Replaces Plate) ---
           ctx.save();
+          // Translate to where the plate was (approx x=-21, y=0)
           ctx.translate(-21, 0); 
+          // Base Pivot
           ctx.fillStyle = '#1e293b'; ctx.beginPath(); ctx.arc(0, 0, 4, 0, Math.PI*2); ctx.fill();
-          
-          const secTimeSinceFire = time - (tower.lastSecondaryFired || 0);
-          const secRecoil = secTimeSinceFire < 150 ? -2 * (1 - secTimeSinceFire/150) : 0;
-          
-          // Radar sweep when idle
-          let secAngle = tower.secondaryAngle || 0;
-          if (secTimeSinceFire > 1000) {
-              secAngle += Math.sin(time * 0.002) * 0.3;
-          }
-          ctx.rotate(secAngle);
+          // Rotation
+          const secRecoil = (time - (tower.lastSecondaryFired || 0)) < 150 ? -2 * (1 - (time - (tower.lastSecondaryFired||0))/150) : 0;
+          ctx.rotate(tower.secondaryAngle || 0);
           ctx.translate(secRecoil, 0);
           
+          // Mini Missile Pod Body (White)
           ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.roundRect(-4, -6, 14, 12, 2); ctx.fill(); ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 1; ctx.stroke();
+          // Side Detail (Orange Stripe)
           ctx.fillStyle = '#ea580c'; ctx.fillRect(-2, -6, 4, 12);
+          // Pod Face
           ctx.fillStyle = '#0f172a'; ctx.fillRect(8, -5, 3, 10);
-          
-          const isSecLoaded = secTimeSinceFire > 200;
+          // Missiles (1 centered)
+          const isSecLoaded = (time - (tower.lastSecondaryFired || 0)) > 200;
           if (isSecLoaded) { ctx.fillStyle = '#f97316'; ctx.beginPath(); ctx.arc(9.5, 0, 2.5, 0, Math.PI*2); ctx.fill(); }
-          
-          // Small scanning laser from secondary
-          if (secTimeSinceFire > 1000) {
-              ctx.globalCompositeOperation = 'lighter';
-              ctx.fillStyle = `rgba(249, 115, 22, ${0.1 + corePulse * 0.1})`;
-              ctx.beginPath(); ctx.moveTo(11, -1); ctx.lineTo(60, -15); ctx.lineTo(60, 15); ctx.lineTo(11, 1); ctx.fill();
-              ctx.globalCompositeOperation = 'source-over';
-          }
           ctx.restore();
 
           // Main Launcher
           ctx.save(); const pivotX = 4; const pivotY = 0; ctx.translate(pivotX, pivotY + fireRecoil); ctx.rotate(launcherAngle); 
-          let podLen = 32; let podHeight = 44; if (tower.ammoType === 'SPECIAL') { const expandDur = 800; const progress = Math.min(1, Math.max(0, (animTime - 15000) / expandDur)); const ease = 1 - Math.pow(1 - progress, 3); podLen = 32 + (12 * ease); podHeight = 44 + (8 * ease); } 
-          if (tower.ammoType) { const isSpecial = tower.ammoType === 'SPECIAL'; ctx.save(); ctx.translate(32, 0); if (isSpecial) { ctx.scale(2.0, 2.0); const grad = ctx.createLinearGradient(0, -6, 0, 6); grad.addColorStop(0, '#475569'); grad.addColorStop(0.5, '#0f172a'); grad.addColorStop(1, '#020617'); ctx.fillStyle = grad; ctx.beginPath(); ctx.moveTo(-5, -5); ctx.lineTo(-5, 5); ctx.lineTo(-25, 6); ctx.lineTo(-25, -6); ctx.fill(); const headGrad = ctx.createLinearGradient(-40, 0, -25, 0); headGrad.addColorStop(0, '#fff7ed'); headGrad.addColorStop(0.5, '#f97316'); headGrad.addColorStop(1, '#7c2d12'); ctx.fillStyle = headGrad; ctx.beginPath(); ctx.moveTo(-25, -6); ctx.lineTo(-25, 6); ctx.lineTo(-40, 0); ctx.fill(); const pulse = Math.abs(Math.sin(time * 0.005)); ctx.shadowColor = '#f97316'; ctx.shadowBlur = 10; ctx.fillStyle = `rgba(249, 115, 22, ${0.6 + pulse * 0.4})`; ctx.fillRect(-20, -2, 15, 4); ctx.shadowBlur = 0; } else { ctx.shadowBlur = 5; ctx.shadowColor = '#000'; ctx.fillStyle = '#e2e8f0'; ctx.fillRect(-40, -7, 35, 14); ctx.fillStyle = '#94a3b8'; ctx.beginPath(); ctx.moveTo(-40, -7); ctx.lineTo(-40, 7); ctx.lineTo(-55, 0); ctx.fill(); ctx.fillStyle = '#ef4444'; ctx.fillRect(-30, -7, 4, 14); ctx.fillRect(-20, -7, 4, 14); } ctx.restore(); } 
-          
-          // High quality pod rendering
-          ctx.fillStyle = '#0f172a'; ctx.beginPath(); ctx.roundRect(-5, -podHeight/2, podLen, podHeight, 4); ctx.fill(); 
-          ctx.fillStyle = '#e2e8f0'; ctx.beginPath(); ctx.roundRect(-5, -podHeight/2 - 2, podLen, podHeight/2 + 2, [4,4,0,0]); ctx.fill(); 
-          ctx.fillStyle = '#cbd5e1'; ctx.beginPath(); ctx.roundRect(-5, 0, podLen, podHeight/2 + 2, [0,0,4,4]); ctx.fill(); 
-          ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 1; ctx.strokeRect(-5, -podHeight/2, podLen, podHeight); 
-          ctx.fillStyle = '#f97316'; ctx.fillRect(10, -podHeight/2 + 4, 4, podHeight - 8); 
-          
-          // Pod glowing details
-          ctx.fillStyle = `rgba(14, 165, 233, ${0.5 + corePulse * 0.5})`;
-          ctx.shadowColor = '#0ea5e9'; ctx.shadowBlur = 5;
-          ctx.fillRect(16, -podHeight/2 + 6, 8, 2);
-          ctx.fillRect(16, podHeight/2 - 8, 8, 2);
-          ctx.shadowBlur = 0;
-
-          ctx.restore(); 
-          
-          // Charging indicator
-          if (animTime > 18000) { 
-              const chargeRate = (animTime - 18000) / 2000;
-              if (Math.floor(time / (100 - chargeRate * 80)) % 2 === 0) { 
-                  ctx.fillStyle = '#ef4444'; ctx.shadowColor = '#ef4444'; ctx.shadowBlur = 15; 
-                  ctx.beginPath(); ctx.arc(18, -8, 3, 0, Math.PI*2); ctx.fill(); 
-                  ctx.shadowBlur = 0; 
-              } 
-          } else if (isIdle) {
-              // Idle status light
-              ctx.fillStyle = `rgba(16, 185, 129, ${0.3 + corePulse * 0.7})`; 
-              ctx.shadowColor = '#10b981'; ctx.shadowBlur = 5; 
-              ctx.beginPath(); ctx.arc(18, -8, 2, 0, Math.PI*2); ctx.fill(); 
-              ctx.shadowBlur = 0; 
-          }
+          let podLen = 32; let podHeight = 20; if (tower.ammoType === 'SPECIAL') { const expandDur = 800; const progress = Math.min(1, Math.max(0, (animTime - 15000) / expandDur)); const ease = 1 - Math.pow(1 - progress, 3); podLen = 32 + (12 * ease); podHeight = 20 + (8 * ease); } 
+          if (tower.ammoType) { const isSpecial = tower.ammoType === 'SPECIAL'; ctx.save(); ctx.translate(32, 0); if (isSpecial) { ctx.scale(2.0, 2.0); const grad = ctx.createLinearGradient(0, -6, 0, 6); grad.addColorStop(0, '#475569'); grad.addColorStop(0.5, '#0f172a'); grad.addColorStop(1, '#020617'); ctx.fillStyle = grad; ctx.beginPath(); ctx.moveTo(-5, -5); ctx.lineTo(-5, 5); ctx.lineTo(-40, 6); ctx.lineTo(-40, -6); ctx.fill(); const headGrad = ctx.createLinearGradient(-65, 0, -40, 0); headGrad.addColorStop(0, '#fff7ed'); headGrad.addColorStop(0.5, '#f97316'); headGrad.addColorStop(1, '#7c2d12'); ctx.fillStyle = headGrad; ctx.beginPath(); ctx.moveTo(-40, -6); ctx.lineTo(-40, 6); ctx.lineTo(-65, 0); ctx.fill(); const pulse = Math.abs(Math.sin(time * 0.005)); ctx.shadowColor = '#f97316'; ctx.shadowBlur = 10; ctx.fillStyle = `rgba(249, 115, 22, ${0.6 + pulse * 0.4})`; ctx.fillRect(-35, -2, 30, 4); ctx.shadowBlur = 0; } else { ctx.shadowBlur = 5; ctx.shadowColor = '#000'; ctx.fillStyle = '#e2e8f0'; ctx.fillRect(-60, -7, 55, 14); ctx.fillStyle = '#94a3b8'; ctx.beginPath(); ctx.moveTo(-60, -7); ctx.lineTo(-60, 7); ctx.lineTo(-78, 0); ctx.fill(); ctx.fillStyle = '#ef4444'; ctx.fillRect(-50, -7, 4, 14); ctx.fillRect(-40, -7, 4, 14); } ctx.restore(); } ctx.fillStyle = '#0f172a'; ctx.beginPath(); ctx.roundRect(-5, -podHeight/2, podLen, podHeight, 4); ctx.fill(); ctx.fillStyle = '#e2e8f0'; ctx.beginPath(); ctx.roundRect(-5, -podHeight/2 - 2, podLen, podHeight/2 + 2, [4,4,0,0]); ctx.fill(); ctx.fillStyle = '#cbd5e1'; ctx.beginPath(); ctx.roundRect(-5, 0, podLen, podHeight/2 + 2, [0,0,4,4]); ctx.fill(); ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 1; ctx.strokeRect(-5, -podHeight/2, podLen, podHeight); ctx.fillStyle = '#f97316'; ctx.fillRect(10, -podHeight/2 + 4, 4, podHeight - 8); ctx.restore(); if (animTime > 18000) { if (Math.floor(time / 100) % 2 === 0) { ctx.fillStyle = '#ef4444'; ctx.shadowColor = '#ef4444'; ctx.shadowBlur = 10; ctx.beginPath(); ctx.arc(18, -8, 2, 0, Math.PI*2); ctx.fill(); ctx.shadowBlur = 0; } }
       } else if (tower.type === TowerType.BLACKHOLE) {
           const isGiantShot = tower.lastShotWasGiant || false; const animDuration = isGiantShot ? 1200 : 600; const isShooting = timeSinceFire < animDuration; const t = Math.min(1, timeSinceFire / animDuration); let scaleAnim = 0; if (isShooting) { if (t < 0.1) scaleAnim = t / 0.1; else { const releaseT = (t - 0.1) / 0.9; scaleAnim = 1 + Math.sin(releaseT * Math.PI * 5) * Math.exp(-releaseT * 3) * 0.3; } } const baseScale = 2.2; const targetScale = isGiantShot ? 4.5 : 1.4; const envelope = isShooting ? Math.pow(1 - t, 0.5) : 0; const expansion = envelope * (targetScale - 1.0); const currentScale = baseScale + expansion + (isShooting ? 0 : Math.sin(time/200)*0.05); const stretchAmt = isShooting ? (1-t) * (isGiantShot ? 0.6 : 0.3) : 0; const jitter = isGiantShot && isShooting ? (Math.random() - 0.5) * 0.1 : 0; const scaleX = currentScale * (1 - stretchAmt + jitter); const scaleY = currentScale * (1 + stretchAmt + jitter); ctx.save(); ctx.scale(scaleX, scaleY); ctx.beginPath(); ctx.strokeStyle = 'rgba(59, 130, 246, 0.1)'; ctx.lineWidth = 2; ctx.arc(0, 0, 26, 0, Math.PI * 2); ctx.stroke(); ctx.save(); ctx.rotate(time * 0.0005); ctx.strokeStyle = 'rgba(59, 130, 246, 0.3)'; ctx.lineWidth = 1; ctx.beginPath(); const dashLen = Math.PI / 4; for(let i=0; i<4; i++) { ctx.arc(0, 0, 22, i * Math.PI/2, i * Math.PI/2 + dashLen/2); ctx.stroke(); } ctx.restore(); ctx.fillStyle = '#0a0a0a'; ctx.beginPath(); ctx.ellipse(0, 12, 16, 6, 0, 0, Math.PI*2); ctx.fill(); ctx.shadowColor = '#2563eb'; ctx.shadowBlur = 10; ctx.strokeStyle = '#2563eb'; ctx.lineWidth = 0.5; ctx.stroke(); ctx.shadowBlur = 0; const rotation = (time / 400) + (isShooting ? Math.pow(1-t, 2) * 25 : 0); ctx.shadowBlur = isGiantShot && isShooting ? 60 : 20; ctx.shadowColor = isGiantShot ? '#ffffff' : '#3b82f6'; ctx.lineWidth = isGiantShot ? 3 : 2.5; ctx.strokeStyle = isGiantShot ? '#bfdbfe' : '#3b82f6'; ctx.beginPath(); ctx.ellipse(0, 0, 24, 10, rotation, 0, Math.PI*2); ctx.stroke(); ctx.strokeStyle = isGiantShot ? '#60a5fa' : '#2563eb'; ctx.beginPath(); ctx.ellipse(0, 0, 20, 18, -rotation * 1.2, 0, Math.PI*2); ctx.stroke(); if (isGiantShot) { ctx.strokeStyle = '#ffffff'; ctx.beginPath(); ctx.ellipse(0, 0, 12, 32, rotation * 0.5, 0, Math.PI*2); ctx.stroke(); } ctx.fillStyle = '#fff'; for(let i=0; i<3; i++) { const ang = (time * 0.002) + (i * (Math.PI * 2 / 3)); const rx = Math.cos(ang) * 28; const ry = Math.sin(ang) * 8; ctx.globalAlpha = 0.6; ctx.beginPath(); ctx.arc(rx, ry, 1.5, 0, Math.PI*2); ctx.fill(); } ctx.globalAlpha = 1.0; ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(0,0, 15, 0, Math.PI*2); ctx.fill(); if (isShooting && t < 0.2) { ctx.fillStyle = '#fff'; ctx.globalAlpha = 1 - (t/0.2); ctx.beginPath(); ctx.arc(0,0, 16, 0, Math.PI*2); ctx.fill(); ctx.globalAlpha = 1; } ctx.restore(); ctx.shadowBlur = 0;
       }
